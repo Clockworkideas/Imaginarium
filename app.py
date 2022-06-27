@@ -4,15 +4,19 @@ import os
 from pathlib import Path
 from io import BytesIO
 import time
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
-from utils import parse_arg_boolean, parse_arg_dalle_version
-from consts import ModelSize
-dalle_model = None
+from consts import DEFAULT_IMG_OUTPUT_DIR, ModelSize
+from utils import parse_arg_dalle_version, parse_arg_boolean
+
+DEFAULT_IMG_OUTPUT_DIR
 
 app = Flask(__name__)
 CORS(app)
 print("Welcome to the Imaginarium Server. This might take up to two minutes.")
+from dalle_model import DalleModel
+dalle_model = None
 
 parser = argparse.ArgumentParser(description = "Imaginarium app to visualize prompts")
 parser.add_argument("--port", type=int, default=8000, help = "backend port")
@@ -55,7 +59,12 @@ def generate_images_api():
                 'generatedImgsFormat': args.img_format}
     return jsonify(response)
 
+with app.app_context():
+    dalle_model = DalleModel(args.model_version)
+    dalle_model.generate_images("warm-up", 1)
+    print("--> DALL-E Server is up and running!")
+    print(f"--> Model selected - DALL-E {args.model_version}")
 
 if __name__ == "__main__":
     print("Running flask server")
-    app.run(host="0.0.0.0", port=args.port, debug=False)
+    app.run(host="0.0.0.0", port=args.port, debug=True)
