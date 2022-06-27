@@ -23,4 +23,5 @@ def ping():
 
 
 if __name__ == "__main__":
+    print("Running flask server")
     app.run(host="0.0.0.0", port=args.port, debug=False)
