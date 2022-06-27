@@ -26,6 +26,13 @@ parser.add_argument("--img_format", type = str.lower, default = "JPEG", help = "
 parser.add_argument("--output_dir", type = str, default = DEFAULT_IMG_OUTPUT_DIR, help = "Customer directory for generated images")
 args = parser.parse_args()
 
+
+@app.route("/", methods=["GET"])
+@cross_origin()
+def health_check():
+    return jsonify(success=True)
+
+
 @app.route("/ping", methods=["GET"])
 @cross_origin()
 def ping():
