@@ -6,7 +6,8 @@ from io import BytesIO
 import time
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
-from dalle_model import DalleModel
+from utils import parse_arg_boolean, parse_arg_dalle_version
+from consts import ModelSize
 dalle_model = None
 
 app = Flask(__name__)
